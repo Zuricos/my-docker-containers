@@ -18,8 +18,8 @@ POSTGRES_PORT=5432
 ```
 ### SCHEMAS ENV
 ```env
-# Comma-separated list of schema/user names
-SCHEMAS_USERS=schema1,schema2,schema3
+# Comma-separated list of databases/user names
+DB_USERS=schema1,schema2,schema3
 
 # Password for schema1 (variable name is db_<schema_name>_pw)
 db_schema1_pw=<password_for_schema1>
@@ -48,7 +48,7 @@ KC_DB_USERNAME=keycloak
 KC_DB_PASSWORD=<password>
 
 # jdbc:postgresql://<POSTGRES_CONTAINER_NAME>:<POSTGRES_PORT>/<DB_NAME>
-KC_DB_URL=jdbc:postgresql://database/postgres?currentSchema=keycloak
+KC_DB_URL=jdbc:postgresql://database/postgres
 
 KC_BOOTSTRAP_ADMIN_USERNAME=admin
 KC_BOOTSTRAP_ADMIN_PASSWORD=<Admin PW>
