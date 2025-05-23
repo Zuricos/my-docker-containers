@@ -51,7 +51,7 @@ jobs:
         uses: Zuricos/gh-actions/docker-build-and-publish@main
         with:
           platforms: linux/amd64
-          context:  src
+          context:  src/postgres
           dockerfile: src/postgres/database.Dockerfile
           image-name: postgres-dynamic-schemas
           version-tag: ${{ steps.set-container-prefix.outputs.CONTAINER_PREFIX }}${{ needs.compute-version.outputs.version }}${{ needs.compute-version.outputs.suffix }}
