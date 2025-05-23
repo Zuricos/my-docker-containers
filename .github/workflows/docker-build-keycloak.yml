@@ -1,0 +1,70 @@
+name: Publish - Keycloak 
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/keycloak/**
+      - .github/workflows/docker-build-keycloak.yml
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - src/keycloak/**
+      - .github/workflows/docker-build-keycloak.yml
+
+jobs:
+  compute-version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compute Version
+        id: compute-version
+        uses: Zuricos/gh-actions/compute-version@main
+        with:
+          prefix: "keycloak-v26.2"
+          paths: "src/keycloak .github/workflows/docker-build-keycloak.yml"
+    outputs:
+      prefix: ${{ steps.compute-version.outputs.prefix }}
+      version: ${{ steps.compute-version.outputs.version }}
+      suffix: ${{ steps.compute-version.outputs.suffix }}
+      needsBump: ${{ steps.compute-version.outputs.needs_bump }}
+      version_tag: ${{ steps.compute-version.outputs.version_tag }}
+
+  build-and-publish:
+    needs: compute-version
+    if: ${{ needs.compute-version.outputs.needsBump }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set Container Prefix
+        id: set-container-prefix
+        run: echo "CONTAINER_PREFIX=v26.2" >> $GITHUB_OuTPUTS
+      - name: Build and Publish Docker Image
+        id: build_and_publish
+        uses: Zuricos/gh-actions/docker-build-and-publish@main
+        with:
+          platforms: linux/amd64
+          context:  src
+          dockerfile: src/keycloak/keycloak.Dockerfile
+          image-name: keycloak
+          version-tag: ${{ steps.set-container-prefix.outputs.CONTAINER_PREFIX }} ${{ needs.compute-version.outputs.version }}${{ needs.compute-version.outputs.suffix }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Tag
+        uses: Zuricos/gh-actions/push-tag@main
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          tag: ${{ needs.compute-version.outputs.version_tag }}${{ needs.compute-version.outputs.suffix }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/zuricos/keycloak
+          subject-digest: ${{ steps.build_and_publish.outputs.image-digest }}
+          push-to-registry: true 

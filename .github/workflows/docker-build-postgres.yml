@@ -1,19 +1,19 @@
-name: Publish - Schema Postgres Server
+name: Publish - Postgres Dynamic Schemas
 
 on:
   push:
     branches:
       - main
     paths:
-      - src/**
-      - .github/workflows/docker-build.yml
+      - src/postgres/**
+      - .github/workflows/docker-build-postgres.yml
   workflow_dispatch:
   pull_request:
     branches:
       - main
     paths:
-      - src/**
-      - .github/workflows/docker-build.yml
+      - src/postgres/**
+      - .github/workflows/docker-build-postgres.yml
 
 jobs:
   compute-version:
@@ -23,8 +23,8 @@ jobs:
         id: compute-version
         uses: Zuricos/gh-actions/compute-version@main
         with:
-          prefix: "17.5-bookworm"
-          paths: "src .github/workflows/docker-build.yml"
+          prefix: "postgres-v17.5-bookworm"
+          paths: "src/postgres .github/workflows/docker-build-postgres.yml"
     outputs:
       prefix: ${{ steps.compute-version.outputs.prefix }}
       version: ${{ steps.compute-version.outputs.version }}
@@ -43,15 +43,18 @@ jobs:
       attestations: write
     steps:
       - uses: actions/checkout@v4
+      - name: Set Container Prefix
+        id: set-container-prefix
+        run: echo "CONTAINER_PREFIX=v17.5-bookworm" >> $GITHUB_OuTPUTS
       - name: Build and Publish Docker Image
         id: build_and_publish
         uses: Zuricos/gh-actions/docker-build-and-publish@main
         with:
           platforms: linux/amd64
           context:  src
-          dockerfile: src/database.Dockerfile
+          dockerfile: src/postgres/database.Dockerfile
           image-name: postgres-dynamic-schemas
-          version-tag: ${{ needs.compute-version.outputs.prefix }}${{ needs.compute-version.outputs.version }}${{ needs.compute-version.outputs.suffix }}
+          version-tag: ${{ steps.set-container-prefix.outputs.CONTAINER_PREFIX }} ${{ needs.compute-version.outputs.version }}${{ needs.compute-version.outputs.suffix }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Push Tag
         uses: Zuricos/gh-actions/push-tag@main
