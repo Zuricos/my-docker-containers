@@ -57,3 +57,9 @@ jobs:
         with:
           tag: ${{ needs.compute-version.outputs.version_tag }}${{ needs.compute-version.outputs.suffix }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ghcr.io/zuricos/postgres-docker-dynamic-schemas
+          subject-digest: ${{ steps.build_and_publish.outputs.image-digest }}
+          push-to-registry: true 
