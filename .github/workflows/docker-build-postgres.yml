@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set Container Prefix
         id: set-container-prefix
-        run: echo "CONTAINER_PREFIX=v17.5-bookworm" >> $GITHUB_OuTPUTS
+        run: echo "CONTAINER_PREFIX=v17.5-bookworm" >> $GITHUB_OUTPUTS
       - name: Build and Publish Docker Image
         id: build_and_publish
         uses: Zuricos/gh-actions/docker-build-and-publish@main
