@@ -6,12 +6,14 @@ on:
       - main
     paths:
       - src/**
+      - .github/workflows/docker-build.yml
   workflow_dispatch:
   pull_request:
     branches:
       - main
     paths:
       - src/**
+      - .github/workflows/docker-build.yml
 
 jobs:
   compute-version:
@@ -22,7 +24,7 @@ jobs:
         uses: Zuricos/gh-actions/compute-version@main
         with:
           prefix: "v17.5-"
-          paths: "src"
+          paths: "src .github/workflows/docker-build.yml"
     outputs:
       prefix: ${{ steps.compute-version.outputs.prefix }}
       version: ${{ steps.compute-version.outputs.version }}
