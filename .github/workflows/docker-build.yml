@@ -23,7 +23,7 @@ jobs:
         id: compute-version
         uses: Zuricos/gh-actions/compute-version@main
         with:
-          prefix: "v17.5"
+          prefix: "17.5-bookworm"
           paths: "src .github/workflows/docker-build.yml"
     outputs:
       prefix: ${{ steps.compute-version.outputs.prefix }}
