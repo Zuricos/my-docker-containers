@@ -5,7 +5,7 @@ services:
       dockerfile: database.Dockerfile
     container_name: postgres
     environment:
-      - SCHEMAS_USERS=schema1,schema2
+      - DB_USERS=schema1,schema2
       - db_schema1_pw=s1
       - db_schema2_pw=s2
       - POSTGRES_PASSWORD=postgres
