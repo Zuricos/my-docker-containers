@@ -19,14 +19,14 @@ POSTGRES_PORT=5432
 ### SCHEMAS ENV
 ```env
 # Comma-separated list of databases/user names
-DB_USERS=schema1,schema2,schema3
+DB_USERS=user1,user2,user3
 
-# Password for schema1 (variable name is db_<schema_name>_pw)
-db_schema1_pw=<password_for_schema1>
+# Password for schema1 (variable name is db_<user_name>_pw)
+db_user1_pw=<password_for_user1>
 # Password for schema2
-db_schema2_pw=<password_for_schema2>
+db_user2_pw=<password_for_user2>
 # Password for schema3
-db_schema3_pw=<password_for_schema3>
+db_user3_pw=<password_for_user3>
 ```
 
 ## KEYCLOAK

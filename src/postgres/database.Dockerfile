@@ -1,4 +1,4 @@
-FROM postgres:17.5-bookworm
+FROM postgres:17.6-bookworm
 
 # Copy the SQL scripts and the custom entry point script
 RUN mkdir -p /entrypoint
