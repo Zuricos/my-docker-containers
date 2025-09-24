@@ -1,13 +1,13 @@
 services:
-  schema-postgres:
+  postgres:
     build:
       context: .
       dockerfile: database.Dockerfile
     container_name: postgres
     environment:
-      - DB_USERS=schema1,schema2
-      - db_schema1_pw=s1
-      - db_schema2_pw=s2
+      - DB_USERS=user1,user2
+      - db_user1_pw=s1
+      - db_user2_pw=s2
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
